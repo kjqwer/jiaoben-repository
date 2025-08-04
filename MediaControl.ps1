@@ -66,14 +66,8 @@ function Test-MediaPlayerRunning {
     
     # 检查常见的媒体播放器进程
     $mediaPlayers = @(
-        "Music.UI",
-        "ZuneMusic",
         "GrooveMusic",
         "WindowsMediaPlayer",
-        "spotify",
-        "chrome",
-        "msedge",
-        "firefox",
         "QQMusic",
         "Microsoft.Media.Player"
     )
