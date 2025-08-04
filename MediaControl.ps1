@@ -31,19 +31,10 @@ public class MediaControl {
     public const uint APPCOMMAND_MEDIA_STOP = 13;
     
     public static void SendMediaCommand(uint command) {
-        // 发送到桌面窗口，系统会自动路由到当前活跃的媒体播放器
-        IntPtr desktopWindow = GetDesktopWindow();
+        // 只发送到Shell窗口，让系统自动路由到当前活跃的媒体播放器
+        // 避免重复发送到具体播放器窗口
         IntPtr shellWindow = GetShellWindow();
-        
-        // 尝试多个目标窗口以确保命令被接收
-        PostMessage(desktopWindow, WM_APPCOMMAND, IntPtr.Zero, (IntPtr)(command << 16));
         PostMessage(shellWindow, WM_APPCOMMAND, IntPtr.Zero, (IntPtr)(command << 16));
-        
-        // 也尝试发送到当前前台窗口
-        IntPtr foregroundWindow = GetForegroundWindow();
-        if (foregroundWindow != IntPtr.Zero) {
-            PostMessage(foregroundWindow, WM_APPCOMMAND, IntPtr.Zero, (IntPtr)(command << 16));
-        }
     }
 }
 "@
