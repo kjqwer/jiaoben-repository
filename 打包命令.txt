@@ -1,0 +1,2 @@
+Invoke-ps2exe -InputFile "open_process_directory.ps1" -OutputFile "OpenProcessDirectory.exe" -RequireAdmin
+Invoke-ps2exe -InputFile "MediaControl.ps1" -OutputFile "MediaControl.exe" -RequireAdmin

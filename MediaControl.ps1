@@ -60,7 +60,8 @@ function Test-MediaPlayerRunning {
         "GrooveMusic",
         "WindowsMediaPlayer",
         "QQMusic",
-        "Microsoft.Media.Player"
+        "Microsoft.Media.Player",
+        "PotPlayerMini64"
     )
     
     foreach ($player in $mediaPlayers) {
@@ -98,7 +99,8 @@ function Start-MediaPlayer {
     #>
     param([bool]$Silent = $false)
     
-    $shortcutPath = "D:\1awd\快速使用\应用\mus.lnk"
+    # $shortcutPath = "D:\1awd\快速使用\应用\mus.lnk"
+    $shortcutPath = "D:\1awd\快速使用\应用\pot.lnk"
     
     if (Test-Path $shortcutPath) {
         try {
