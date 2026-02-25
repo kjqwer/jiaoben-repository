@@ -62,7 +62,8 @@ function Test-MediaPlayerRunning {
         "QQMusic",
         "Microsoft.Media.Player",
         "PotPlayerMini64",
-        "MusicPlayer"
+        "MusicPlayer",
+        "AIMP"
     )
     
     foreach ($player in $mediaPlayers) {
