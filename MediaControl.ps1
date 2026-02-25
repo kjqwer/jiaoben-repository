@@ -39,6 +39,60 @@ public class MediaControl {
 }
 "@
 
+$AimpExePath = "C:\Program Files\AIMP\AIMP.exe"
+
+function Test-AimpRunning {
+    param([bool]$Silent = $false)
+    
+    $process = Get-Process -Name "AIMP" -ErrorAction SilentlyContinue
+    if ($process) {
+        if (-not $Silent) {
+            Write-Host "检测到媒体播放器进程: AIMP" -ForegroundColor Yellow
+        }
+        return $true
+    }
+    
+    return $false
+}
+
+function Invoke-AimpCommand {
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("playpause", "next", "prev", "stop")]
+        [string]$Command,
+        
+        [bool]$Silent = $false
+    )
+    
+    if (-not (Test-Path $AimpExePath)) {
+        if (-not $Silent) {
+            Write-Warning "找不到 AIMP.exe: $AimpExePath，将回退到系统媒体控制命令"
+        }
+        return $false
+    }
+    
+    $aimpCli = switch ($Command.ToLower()) {
+        "playpause" { "/playpause" }
+        "next" { "/next" }
+        "prev" { "/prev" }
+        "stop" { "/stop" }
+    }
+    
+    try {
+        if (-not $Silent) {
+            Write-Host "通过 AIMP 命令行发送命令: $aimpCli" -ForegroundColor Green
+        }
+        Start-Process -FilePath $AimpExePath -ArgumentList $aimpCli -WindowStyle Hidden
+        return $true
+    }
+    catch {
+        if (-not $Silent) {
+            Write-Warning "AIMP 命令发送失败，将回退到系统媒体控制命令: $($_.Exception.Message)"
+        }
+        return $false
+    }
+}
+
 function Test-MediaPlayerRunning {
     <#
     .SYNOPSIS
@@ -171,6 +225,15 @@ function Send-PlayPause {
     param([bool]$Silent = $false)
     
     try {
+        if (Test-AimpRunning -Silent $Silent) {
+            if (Invoke-AimpCommand -Command "playpause" -Silent $Silent) {
+                if (-not $Silent) {
+                    Write-Host "命令已发送！" -ForegroundColor Green
+                }
+                return
+            }
+        }
+        
         # 确保媒体播放器正在运行
         Initialize-MediaPlayer -Silent $Silent
         
@@ -201,6 +264,15 @@ function Send-NextTrack {
     param([bool]$Silent = $false)
     
     try {
+        if (Test-AimpRunning -Silent $Silent) {
+            if (Invoke-AimpCommand -Command "next" -Silent $Silent) {
+                if (-not $Silent) {
+                    Write-Host "命令已发送！" -ForegroundColor Green
+                }
+                return
+            }
+        }
+        
         # 确保媒体播放器正在运行
         Initialize-MediaPlayer -Silent $Silent
         
@@ -231,6 +303,15 @@ function Send-PreviousTrack {
     param([bool]$Silent = $false)
     
     try {
+        if (Test-AimpRunning -Silent $Silent) {
+            if (Invoke-AimpCommand -Command "prev" -Silent $Silent) {
+                if (-not $Silent) {
+                    Write-Host "命令已发送！" -ForegroundColor Green
+                }
+                return
+            }
+        }
+        
         # 确保媒体播放器正在运行
         Initialize-MediaPlayer -Silent $Silent
         
@@ -261,6 +342,15 @@ function Send-Stop {
     param([bool]$Silent = $false)
     
     try {
+        if (Test-AimpRunning -Silent $Silent) {
+            if (Invoke-AimpCommand -Command "stop" -Silent $Silent) {
+                if (-not $Silent) {
+                    Write-Host "命令已发送！" -ForegroundColor Green
+                }
+                return
+            }
+        }
+        
         # 确保媒体播放器正在运行
         Initialize-MediaPlayer -Silent $Silent
         
